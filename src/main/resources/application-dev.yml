@@ -1,0 +1,66 @@
+#Spring Boot 测试环境配置
+
+#端口
+server:
+  port: 443 #设置https端口
+  http:
+    port: 8080 #设置http端口,访问此端口将被重定向到https端口
+#开启Https协议    
+  ssl:
+    key-store: classpath:mykeystore.keystore
+    key-store-password: 123456
+    key-store-type: jks
+    key-alias: mykeystore
+    
+#文件上传路径
+file-upload-path: D:/myWorkspace/mySpringBoot/uploadPath/
+
+#Spring配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useAffectedRows=true&serverTimezone=GMT
+    username: root
+    password: root
+    initialSize: 5
+    filters: stat
+    maxActive: 20
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  mail:
+    host: smtp.163.com
+    username: fanshuye1304@163.com
+    password: fanshuye1304  
+  freemarker:
+    suffix: .html
+    request-context-attribute: request
+    charset: UTF-8
+  aop:
+    proxy-target-class: true
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  devtools:
+    restart:
+      enabled: true
+
+#mybatis配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  typeAliasesPackage: com.entity
+    
+#分页插件PageHelper配置
+pagehelper:
+  helperDialect: mysql  #分页插件方言选择
+  reasonable: true      #合理化参数，设为true时pageNum<=0 时会查第一页， pageNum>pages（超过总数时），会查询最后一页
+  supportMethodsArguments: true

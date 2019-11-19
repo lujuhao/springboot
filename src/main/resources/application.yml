@@ -1,0 +1,5 @@
+#切换项目环境-当前:dev
+spring:
+  profiles:
+    active: dev
+

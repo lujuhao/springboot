@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserDao">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.entity.User">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="nickname" property="nickname" />
+		<result column="password" property="password" />
+		<result column="headImg" property="headImg" />
+		<result column="salt" property="salt" />
+		<result column="phone" property="phone" />
+		<result column="email" property="email" />
+		<result column="status" property="status" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+	</resultMap>
+
+	<!-- 获取用户列表 -->
+	<select id="selectUserList" parameterType="com.entity.User" resultMap="BaseResultMap">
+	    SELECT 
+	   		*
+	    FROM 
+	    	`user`
+	    WHERE 
+	    	1=1 
+	   	  <if test="username != null and username !='' ">
+	       	AND  `username` like concat('%',#{username},'%')
+	      </if>
+	      <if test="nickname != null and nickname !='' ">
+	       	AND  `nickname` like concat('%',#{nickname},'%')
+	      </if>
+	       <if test="phone != null and phone !='' ">
+	       	AND  `phone` like concat('%',#{phone},'%')
+	      </if>
+	      <if test="email != null and email !='' ">
+	       	AND  `email` like concat('%',#{email},'%')
+	      </if>
+	      
+	      <choose>
+				<when test="page.orderBy != null and page.orderBy !='' ">
+					ORDER BY ${page.orderBy}
+				</when>
+				
+				<otherwise>
+					ORDER BY `username`
+				</otherwise>
+		</choose>
+ 	 </select>
+  
+  	<!-- 根据用户名称获取用户详情 -->
+	<select id="getUserByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+	    SELECT 
+	    	*
+	    FROM 
+	    	`user`
+	    WHERE 
+	    	`username` = #{loginName}
+  	</select>
+</mapper>
