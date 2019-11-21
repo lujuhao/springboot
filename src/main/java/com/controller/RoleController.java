@@ -50,7 +50,7 @@ public class RoleController extends BaseController {
      */
     @ResponseBody
     @PostMapping("getList")
-    public Map<String, Object> getUserList(int pageNumber, int pageSize, String searchText) {
+    public Map<String, Object> getRoleList(int pageNumber, int pageSize, String searchText) {
         Map<String,Object> result = new HashMap<String,Object>();
         Page<Role> page = new Page<>(pageNumber, pageSize);
         EntityWrapper<Role> wrapper = new EntityWrapper<>();
