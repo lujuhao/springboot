@@ -148,6 +148,8 @@ public class IndexController extends BaseController {
 	    try{
 			verifyCode(session,request);
 			subject.login(token);  
+			User user = (User) SecurityUtils.getSubject().getPrincipal();
+			SecurityUtils.getSubject().getSession().setAttribute("user", user);
 			session.removeAttribute(Constant.RANDOMCODE);
 			return renderSuccess("index");
 		}catch (UnknownAccountException e) {

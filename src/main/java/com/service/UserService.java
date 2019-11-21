@@ -40,10 +40,10 @@ public interface UserService extends IService<User> {
 	public User getUserByName(String loginName);
     
     /**
-     * 删除用户表并且删除用户角色关联表数据
+     * 删除用户
      * @param id
      * @return
      */
-    public boolean deleteUserByIdAndRole(String id);
+    public boolean deleteUserById(String id);
 
 }

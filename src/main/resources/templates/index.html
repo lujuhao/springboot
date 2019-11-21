@@ -6,7 +6,6 @@
     <meta name="renderer" content="webkit">
 	<meta name="keywords" content="">
     <meta name="description" content="">
-    <title>小冷</title>
     <!--[if lt IE 9]>
     <meta http-equiv="refresh" content="0;ie.html" />
     <![endif]-->
@@ -37,10 +36,10 @@
                 <ul class="nav" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element">
-                            <span><img alt="image" class="img-circle" width="64" height="64" src="${request.contextPath}/img/profile_small-1.png" /></span>
+                            <span><img alt="image" class="img-circle" width="64" height="64" src="${Session.user.headImg}" /></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold">Beaut-zihan</strong></span>
+                                <span class="block m-t-xs"><strong class="font-bold">${Session.user.username}</strong></span>
                                 <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
                                 </span>
                             </a>
@@ -214,7 +213,7 @@
                 <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="/index_1" frameborder="0" data-id="index_v1.html" seamless></iframe>
             </div>
             <div class="footer">
-                <div class="pull-right">&copy; 2019-2119 <a href="www.baidu.com" target="_blank">XiaoLengBy</a>
+                <div class="pull-right">&copy; 2019-2999 <a href="https://www.cnblogs.com/ljhblogs/" target="_blank">XiaoLeng</a>
                 </div>
             </div>
         </div>

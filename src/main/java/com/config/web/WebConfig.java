@@ -47,7 +47,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	//项目静态资源映射
-    	registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+    	registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     	//服务器磁盘文件映射
     	registry.addResourceHandler("/myWorkspace/mySpringBoot/uploadPath/**").addResourceLocations("file:"+fileUploadPath);
 	}

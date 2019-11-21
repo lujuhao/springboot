@@ -1,0 +1,231 @@
+<#include "/lib/lib.html">
+<#include "/lib/public.html">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>权限管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <style>
+        .form-control:focus,
+        .single-line:focus {
+            border-color: #0e9aef !important;
+        }
+    </style>
+    
+    <script type="text/javascript" src="${request.contextPath}/views/permission/permissionList.js"></script>
+</head>
+<body class="gray-bg">
+
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins ibox-blue">
+            <div class="ibox-title">
+                <h5>权限管理</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="example" style="margin-top: -10px;">
+                        <div class="btn-group hidden-xs" id="toolbar" role="group">
+                            <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#addModal">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                            	            添加
+                            </button>
+                            <button type="button" class="btn btn-info" id="updateButton">
+                                <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                	修改
+                            </button>
+                            <button type="button" class="btn btn-danger" id="deleteButton">
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                	删除
+                            </button>
+                        </div>
+
+                        <table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
+                            <thead>
+	                            <tr>
+	                                <th data-field="selectItem" data-checkbox="true"></th>
+	                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <@modal "添加权限" "addModal" "addForm">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">类型</label>
+        <div class="col-sm-10" id="typeRadio">
+            <label>
+                <input type="radio" name="type" value="0" checked="">
+                <span>目录</span>
+            </label>
+            <label>
+                <input type="radio" name="type" value="1">
+                <span>菜单</span>
+            </label>
+            <label>
+                <input type="radio" name="type" value="2">
+                <span>按钮</span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group pid">
+        <label class="col-sm-2 control-label">上级目录</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="pid">
+                <option>11</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">权限名称</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="name" placeholder="请输入权限名称">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">图标</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="icon" placeholder="请输入图标图标">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">排序</label>
+        <div class="col-sm-10">
+            <input type="number" class="form-control" name="sort" placeholder="请输入排序">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">权限编码</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="permCode" placeholder="请输入权限编码">
+        </div>
+    </div>
+    <div class="form-group url">
+        <label class="col-sm-2 control-label">url</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="url" placeholder="请输入url">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">描述</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="description" placeholder="请输入描述">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">状态</label>
+        <div class="col-sm-10">
+            <div class="ui-radio ui-radio-primary">
+                <label>
+                    <input type="radio" name="status" value="1" checked="">
+                    <span>启用</span>
+                </label>
+                <label>
+                    <input type="radio" name="status" value="0">
+                    <span>禁用</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    </@modal>
+
+    <@modal "修改权限" "updateModal" "updateForm">
+    <input type="hidden" name="id">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">类型</label>
+        <div class="col-sm-10" id="typeRadio2">
+            <label>
+                <input type="radio" name="type" value="0" checked="">
+                <span>目录</span>
+            </label>
+            <label>
+                <input type="radio" name="type" value="1">
+                <span>菜单</span>
+            </label>
+            <label>
+                <input type="radio" name="type" value="2">
+                <span>按钮</span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group pid">
+        <label class="col-sm-2 control-label">上级菜单</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="pid" name="pid">
+                <option>1</option>
+                <option>2</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">权限名称</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="name" placeholder="请输入权限名称">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">图标</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="icon" placeholder="请输入图标图标">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">排序</label>
+        <div class="col-sm-10">
+            <input type="number" class="form-control" name="sort" placeholder="请输入排序">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">权限编码</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="permCode" placeholder="请输入权限编码">
+        </div>
+    </div>
+    <div class="form-group url">
+        <label class="col-sm-2 control-label">url</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="url" placeholder="请输入url">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">描述</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="description" placeholder="请输入描述">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">状态</label>
+        <div class="col-sm-10">
+            <div class="ui-radio ui-radio-primary">
+                <label>
+                    <input type="radio" name="status" value="1" checked="">
+                    <span>启用</span>
+                </label>
+                <label>
+                    <input type="radio" name="status" value="0">
+                    <span>禁用</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    </@modal>
+    
+</body>
+</html>

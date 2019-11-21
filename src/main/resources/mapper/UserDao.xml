@@ -25,28 +25,28 @@
 	    	`user`
 	    WHERE 
 	    	1=1 
-	   	  <if test="username != null and username !='' ">
-	       	AND  `username` like concat('%',#{username},'%')
-	      </if>
-	      <if test="nickname != null and nickname !='' ">
-	       	AND  `nickname` like concat('%',#{nickname},'%')
-	      </if>
-	       <if test="phone != null and phone !='' ">
-	       	AND  `phone` like concat('%',#{phone},'%')
-	      </if>
-	      <if test="email != null and email !='' ">
-	       	AND  `email` like concat('%',#{email},'%')
-	      </if>
+			<if test="username != null and username !='' ">
+			 	AND  `username` LIKE CONCAT('%',#{username},'%')
+			</if>
+			<if test="nickname != null and nickname !='' ">
+			 	AND  `nickname` LIKE CONCAT('%',#{nickname},'%')
+			</if>
+			 <if test="phone != null and phone !='' ">
+			 	AND  `phone` LIKE CONCAT('%',#{phone},'%')
+			</if>
+			<if test="email != null and email !='' ">
+			 	AND  `email` LIKE CONCAT('%',#{email},'%')
+			</if>
 	      
-	      <choose>
+			<choose>
 				<when test="page.orderBy != null and page.orderBy !='' ">
 					ORDER BY ${page.orderBy}
 				</when>
-				
+			
 				<otherwise>
 					ORDER BY `username`
 				</otherwise>
-		</choose>
+			</choose>
  	 </select>
   
   	<!-- 根据用户名称获取用户详情 -->

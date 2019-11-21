@@ -20,4 +20,18 @@ public interface RoleDao extends BaseMapper<Role> {
 	 */
 	List<Role> selectAllRole();
 
+	 /**
+     * 查询角色列表
+     * @param role
+     * @return
+     */
+	List<Role> selectRoleList(Role role);
+
+	/**
+	 * 根据名称获取角色
+	 * @param name
+	 * @return
+	 */
+	Role getRoleByName(String name);
+
 }

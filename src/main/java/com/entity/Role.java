@@ -19,7 +19,7 @@ public class Role extends BaseEntity<Role> {
      * 主键
      */
 	@TableId(value="id")
-	private Long id;
+	private String id;
     /**
      * 角色名
      */
@@ -48,11 +48,11 @@ public class Role extends BaseEntity<Role> {
 	private Date gmtModified;
 
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

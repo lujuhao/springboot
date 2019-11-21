@@ -14,6 +14,13 @@ import java.util.List;
 @Repository
 public interface PermissionDao extends BaseMapper<Permission> {
 
+	/**
+	 * 查询权限列表
+	 * @param permission 查询条件
+	 * @return
+	 */
+	List<Permission> selectPermissionList(Permission permission);
+	
     /**
      * 查询父菜单
      * @param uid 用户ID
@@ -27,7 +34,7 @@ public interface PermissionDao extends BaseMapper<Permission> {
      * @param pid 父ID
      * @return
      */
-    List<Permission> findSubMenu(@Param("uid")String uid, @Param("pid")Long pid);
+    List<Permission> findSubMenu(@Param("uid")String uid, @Param("pid")String pid);
 
     /**
      * 查询用户拥有那些权限

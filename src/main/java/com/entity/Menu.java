@@ -10,9 +10,9 @@ public class Menu implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
 
-    private Long pid;
+    private String pid;
 
     private String name;
 
@@ -22,19 +22,19 @@ public class Menu implements java.io.Serializable {
 
     private List<Menu> children;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getPid() {
+    public String getPid() {
         return pid;
     }
 
-    public void setPid(Long pid) {
+    public void setPid(String pid) {
         this.pid = pid;
     }
 

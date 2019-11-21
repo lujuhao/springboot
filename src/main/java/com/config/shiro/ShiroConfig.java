@@ -81,7 +81,7 @@ public class ShiroConfig {
         /**
          * anon:所有url都都可以匿名访问;
          * authc: 需要认证才能进行访问;
-         * user:配置记住我或认证通过可以访问；
+         * user:配置记住我或认证通过可以访问;
          */
         
         //静态资源过滤
@@ -99,7 +99,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/auth", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/userHeadImgs/", "anon");
-        filterChainDefinitionMap.put("/**", "user");
+        filterChainDefinitionMap.put("/**", "authc");
 
         //登录页面
         shiroFilterFactoryBean.setLoginUrl("/login");

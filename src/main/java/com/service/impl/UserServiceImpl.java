@@ -1,18 +1,20 @@
 package com.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.dao.UserDao;
+import com.dao.UserRoleDao;
 import com.entity.User;
 import com.github.pagehelper.PageHelper;
 import com.service.UserService;
+import com.utils.FileUtil;
 import com.utils.RandomUtil;
 import com.utils.ShiroMd5Util;
 import com.utils.SysConfigContants;
@@ -28,6 +30,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    private UserRoleDao userRoleDao;
 
     /**
      * 分页查询用户列表
@@ -52,13 +57,15 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Override
     public boolean addUser(User user) {
     	user.setId(RandomUtil.getUUID());
+    	user.setGmtCreate(new Date());
     	
     	//密码加密
     	user.setPassword(ShiroMd5Util.SysMd5(user));
     	
     	//设置默认头像
-    	user.setHeadImg(SysConfigContants.USER_HEADIMG_DEFAULT);
-    	user.setGmtCreate(new Date());
+    	if (StringUtils.isEmpty(user.getHeadImg())) {
+    		user.setHeadImg(SysConfigContants.USER_HEADIMG_DEFAULT);
+		}
         Integer result = userDao.insert(user);
         if (result >= 1) {
             return true;
@@ -81,23 +88,28 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     }
 
     /**
-     * 删除用户表并且删除用户角色关联表数据
+     * 删除用户
      * @param id
      * @return
      */
     @Transactional
     @Override
-    public boolean deleteUserByIdAndRole(String id) {
-        // 拼接用户表删除list
-        String[] split = id.split(",");
-        List<String> userIdList = new ArrayList<>();
-        for (String item:split) {
-        	userIdList.add(item);
-        }
-        // 删除用户表数据
-        userDao.deleteBatchIds(userIdList);
+    public boolean deleteUserById(String id) {
+		// 拼接用户表删除list
+		String[] split = id.split(",");
+		for (String userId : split) {
+			User user = userDao.selectById(userId);
+			// 删除用户头像
+			FileUtil.deleteFile(user.getHeadImg());
+			
+			// 删除用户
+			userDao.deleteById(userId);
+			
+			// 删除用户角色
+			userRoleDao.deleteUserRoles(userId);
+		}
 
-        return true;
+		return true;
     }
 
     /**

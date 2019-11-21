@@ -1,4 +1,9 @@
 <!-- ---------------------------全局js------------------------------------------------ -->
+<script>
+var contextPath="${request.contextPath}/";
+var defaultHeadImg="${request.contextPath}/img/defaultHeadImg.jpg";
+</script>
+
 <!-- jquery -->
 <script src="${request.contextPath}/js/jquery.min.js?v=2.1.4"></script>
 
@@ -15,6 +20,12 @@
 <script type="text/javascript" src="${request.contextPath}/js/plugins/jquery-validate/jquery.validate.js"></script>
 <script type="text/javascript" src="${request.contextPath}/js/plugins/jquery-validate/messages_zh.js"></script>
 
+<!-- bootstrap-treegrid -->
+<script src="${request.contextPath}/plugins/treegrid/jquery.treegrid.min.js"></script>
+<script src="${request.contextPath}/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+<script src="${request.contextPath}/plugins/treegrid/jquery.treegrid.extension.js"></script>
+<script src="${request.contextPath}/plugins/treegrid/tree.table.js"></script>
+
 <!-- Ajax-Form -->
 <script type="text/javascript" src="${request.contextPath}/js/jquery.form.js"></script>
 
@@ -30,16 +41,17 @@
 <link rel="shortcut icon" href="${request.contextPath}/img/web-icon.jpg" type="image/x-icon" />
 
 <!-- bootstrap -->
-<link href="${request.contextPath}/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-<link href="${request.contextPath}/css/bootstrap-table.min.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="${request.contextPath}/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link rel="stylesheet" href="${request.contextPath}/css/bootstrap-table.min.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="${request.contextPath}/css/plugins/bootstrap-validator/bootstrapValidator.min.css">
 
 <!-- font-awesome -->
-<link href="${request.contextPath}/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link rel="stylesheet" href="${request.contextPath}/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 
-<!-- bootstrap-treeview -->
-<link href="${request.contextPath}/css/bootstrap-treeview.min.css" rel="stylesheet" type="text/css">
+<!-- bootstrap-treegrid -->
+<link rel="stylesheet" href="${request.contextPath}/css/bootstrap-treeview.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="${request.contextPath}/plugins/treegrid/jquery.treegrid.css">
 
-<link href="${request.contextPath}/css/animate.css" rel="stylesheet">
-<link href="${request.contextPath}/css/style.css?v=4.1.0" rel="stylesheet">
-<link href="${request.contextPath}/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link rel="stylesheet" href="${request.contextPath}/css/animate.css" rel="stylesheet">
+<link rel="stylesheet" href="${request.contextPath}/css/style.css?v=4.1.0" rel="stylesheet">
+<link rel="stylesheet" href="${request.contextPath}/css/plugins/iCheck/custom.css" rel="stylesheet">

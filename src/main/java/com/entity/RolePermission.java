@@ -21,15 +21,15 @@ public class RolePermission extends BaseEntity<RolePermission> {
      * 主键
      */
 	@TableId(value="id")
-	private Long id;
+	private String id;
     /**
      * 角色ID
      */
-	private Long rid;
+	private String rid;
     /**
      * 权限ID
      */
-	private Long pid;
+	private String pid;
 	/**
 	 * 创建时间
 	 */
@@ -42,27 +42,27 @@ public class RolePermission extends BaseEntity<RolePermission> {
 	private Date gmtModified;
 
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Long getRid() {
+	public String getRid() {
 		return rid;
 	}
 
-	public void setRid(Long rid) {
+	public void setRid(String rid) {
 		this.rid = rid;
 	}
 
-	public Long getPid() {
+	public String getPid() {
 		return pid;
 	}
 
-	public void setPid(Long pid) {
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 

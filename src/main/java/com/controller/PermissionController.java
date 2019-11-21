@@ -1,19 +1,25 @@
 package com.controller;
 
 
+import java.util.List;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.entity.Permission;
 import com.entity.RolePermission;
 import com.service.PermissionService;
 import com.vo.ReturnResult;
 import com.vo.ZTreeNodes;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 权限表 Controller
@@ -31,23 +37,23 @@ public class PermissionController extends BaseController {
      * 权限列表页面
      * @return
      */
+    @RequiresPermissions("permission:show")
     @GetMapping("list")
     public String list() {
-        return "permission/list";
+        return "permission/permissionList";
     }
 
     /**
-     * 获取权限列表
+     * 查询权限列表
+     * @param permission 过滤条件
      * @return
      */
+    @RequiresPermissions("permission:show")
+    @GetMapping()
     @ResponseBody
-    @GetMapping("/getList")
-    public List<Permission> getUserList() {
-        // 排序
-        EntityWrapper<Permission> wrapper = new EntityWrapper<>();
-        wrapper.orderBy("sort", true);
-        List<Permission> permissions = permissionService.selectList(wrapper);
-        return permissions;
+    public List<Permission> selectUserByPage() {
+		List<Permission> list = permissionService.selectList(null);
+		return list;
     }
 
     /**
@@ -79,7 +85,7 @@ public class PermissionController extends BaseController {
     @RequestMapping(value = "/addPermission")
     public ReturnResult addPermission(Permission permission) {
         if (permission.getType() == 0) {
-            permission.setPid(0l);
+            permission.setPid("0");
         }
         return permissionService.insert(permission) ? renderSuccess("添加成功") : renderError("添加失败");
     }
@@ -92,7 +98,7 @@ public class PermissionController extends BaseController {
     @RequestMapping(value = "/updatePermission")
     public ReturnResult updatePermission(Permission permission) {
         if (permission.getType() == 0) {
-            permission.setPid(0l);
+            permission.setPid("0");
         }
         return permissionService.updateById(permission) ? renderSuccess("修改成功") : renderError("修改失败");
     }

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.service.IService;
 import com.entity.Menu;
 import com.entity.Permission;
 import com.entity.RolePermission;
+import com.vo.Page;
 import com.vo.ZTreeNodes;
-
 import java.util.List;
 
 /**
@@ -14,6 +14,14 @@ import java.util.List;
  */
 public interface PermissionService extends IService<Permission> {
 
+	/**
+     * 分页查询权限列表
+     * @param permission 过滤条件
+     * @return
+     */
+	Page<Permission> selectPermissionByPage(Page<Permission> page, Permission permission);
+	
+	
     /**
      * 创建登陆用户菜单
      * @param uid

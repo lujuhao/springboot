@@ -1,127 +1,192 @@
 package com.controller;
 
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.entity.Role;
-import com.entity.User;
-import com.entity.UserRole;
-import com.service.RoleService;
-import com.service.UserRoleService;
-import com.vo.ReturnResult;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.entity.Role;
+import com.entity.RolePermission;
+import com.service.RolePermissionService;
+import com.service.RoleService;
+import com.vo.Page;
+import com.vo.ReturnResult;
+import com.vo.ZTreeNodes;
 
 /**
  * 角色Controller
  * @author ljh
  */
 @Controller
-@RequestMapping("/role")
+@RequestMapping("/role/")
 public class RoleController extends BaseController {
 
     @Autowired
     private RoleService roleService;
+    
     @Autowired
-    private UserRoleService userRoleService;
-
+    private RolePermissionService rolePermissionService;
+	
     /**
      * 角色列表页面
      * @return
      */
+    @RequiresPermissions("role:show")
     @GetMapping("list")
     public String list() {
-        return "role/list";
+        return "role/roleList";
     }
 
     /**
-     * 获取角色列表
-     * @param pageNumber 当前页
-     * @param pageSize 每页显示条数
-     * @param searchText 搜索名称
-     * @return
-     */
+   	 * 分页查询角色列表
+   	 * @param role 过滤条件
+   	 * @return
+   	 */
+    @RequiresPermissions("user:show")
+    @GetMapping()
     @ResponseBody
-    @PostMapping("getList")
-    public Map<String, Object> getRoleList(int pageNumber, int pageSize, String searchText) {
-        Map<String,Object> result = new HashMap<String,Object>();
-        Page<Role> page = new Page<>(pageNumber, pageSize);
-        EntityWrapper<Role> wrapper = new EntityWrapper<>();
-        if (!StringUtils.isEmpty(searchText)) {
-            wrapper.like("name", searchText);
-        }
-        wrapper.orderBy("sort", true);
-        Page<Role> rolePage = roleService.selectPage(page, wrapper);
-        result.put("total", rolePage.getTotal());
-        result.put("rows", rolePage.getRecords());
-        return result;
+    public Map<String, Object> selectRoleByPage(HttpServletRequest request,Role role) {
+    	Map<String, Object> map = new HashMap<String, Object>();
+		Page<Role> pageInfo = roleService.selectRoleByPage(new Page<Role>(request),role);
+		map.put("total", pageInfo.getTotal());
+		map.put("rows", pageInfo.getList());
+		return map;
     }
 
     /**
-     * 添加用户
-     * @param role
+     * 添加角色
+     * @param role 角色信息
      * @return
      */
     @ResponseBody
-    @PostMapping("/addRole")
+    @PostMapping
     public ReturnResult addRole(Role role) {
-        return roleService.insert(role) ? renderSuccess("添加成功") : renderError("添加失败");
+    	try {
+    		roleService.addRole(role);
+    		return renderSuccess("添加角色成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return renderError("添加角色失败");
+		}
     }
-
+    
     /**
-     * 修改用户
-     * @param role
-     * @return
-     */
+	 * 验证角色名是否存在
+	 * @param id 角色id
+	 * @param name 角色名称
+	 * @return
+	 */
     @ResponseBody
-    @PostMapping("/updateRole")
-    public ReturnResult updateRole(Role role) {
-        return roleService.updateById(role) ? renderSuccess("修改成功") : renderError("修改失败");
-    }
-
+	@RequestMapping("checkRoleName")
+	public Map<String, Boolean> checkUserName(@RequestParam(required = false)String id,String name){
+    	boolean flag = false;
+    	
+    	Role role = roleService.getRoleByName(name);
+    	if (StringUtils.isEmpty(id)) {
+    		if (null == role) {
+				flag = true;
+			}
+    	}else {
+    		Role oldRole = roleService.selectById(id);
+			if(oldRole.getName().equals(name)){
+				flag = true;
+			}else {
+				if (null == role) {
+					flag = true;
+				}
+			}
+		}
+    	
+    	Map<String, Boolean> map = new HashMap<String, Boolean>();
+    	map.put("valid", flag);
+		return map;
+	}
+    
     /**
      * 删除角色
      * @param id
      * @return
      */
     @ResponseBody
-    @RequestMapping("/delete")
-    public ReturnResult delete(@RequestParam(value = "id", required = false) String id) {
+    @DeleteMapping("{id}")
+    public ReturnResult deleteRole(@PathVariable("id")String id) {
         if (StringUtils.isEmpty(id)) {
-            return renderError("请选择数据");
+            return renderError("请选择要删除的角色");
         }
-        return roleService.deleteRoleByIdAndPermission(id) ? renderSuccess("删除成功") : renderError("删除失败");
+        try {
+        	roleService.deleteRoleById(id);
+        	return renderSuccess("删除角色成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return renderError("删除角色失败");
+		}
     }
-
+    
     /**
-     * 分配角色
-     * 查询用户拥有的角色
+     * 修改角色
+     * @param role
      * @return
      */
     @ResponseBody
-    @RequestMapping("/getUserRole")
-    public ReturnResult getUserRole(@RequestBody User user) {
-        EntityWrapper<UserRole> wrapper = new EntityWrapper<>();
-        wrapper.eq("uid", user.getId());
-        List<UserRole> userRoles = userRoleService.selectList(wrapper);
-        return renderSuccess("分配成功");
+    @PutMapping()
+    public ReturnResult updateUser(Role role) {
+    	try {
+    		roleService.updateById(role);
+    		return renderSuccess("修改角色成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return renderError("修改角色失败");
+		}
     }
-
+    
     /**
-     * 分配用户角色
+     * 获取角色权限
+     * @param id 角色id
      * @return
      */
     @ResponseBody
-    @RequestMapping("/modifyUserRole")
-    public ReturnResult modifyUserRole(@RequestBody List<UserRole> userRoles) {
-        return roleService.modifyUserRole(userRoles) ? renderSuccess("分配成功"): renderError("分配失败");
+    @GetMapping("{id}/permissions")
+    public ReturnResult getRolePermissionsForzTree(@PathVariable("id") String id){
+    	try {
+    		List<ZTreeNodes> permissions = rolePermissionService.getRolePermissionsForzTree(id);
+    		return renderSuccess(permissions);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return renderError("获取角色权限失败");
+		}
     }
-
+    
+    /**
+     * 分配角色权限
+     * @param roleId 角色id
+     * @param rolePermissions 角色权限
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("{id}/permissions")
+    public ReturnResult asignRolePermissions(@PathVariable("id") String roleId, @RequestBody List<RolePermission> rolePermissions){
+    	try {
+    		rolePermissionService.asignRolePermissions(roleId, rolePermissions);
+    		return renderSuccess("分配权限成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return renderError("分配权限失败");
+		}
+    }
 }

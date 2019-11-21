@@ -107,7 +107,8 @@ public class ImageCode {
 
 	// 得到随机字符
 	private String randomStr(int n) {
-		String str1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+		String str1 = "0123456789";
+		//String str1 = "abcdefghijklmnopqrstuvwxyz1234567890";
 		String str2 = "";
 		int len = str1.length() - 1;
 		double r;

@@ -22,7 +22,7 @@ public class FileUtil {
 			String sourceFileName = file.getOriginalFilename();//获取源文件名称
 			String imgType = sourceFileName.substring(sourceFileName.indexOf("."));//获取上传的文件类型(.jpg/.png..)
 			String randomName = RandomUtil.getRandomByTime()+imgType;//根据当前时间随机生成一个文件名称
-			String uploadPath = SysConfigContants.USER_HEADIMG_PATH;//获取上传路径
+			String uploadPath = SysConfigContants.USER_HEADIMG_UPLOAD_PATH;//获取上传路径
 			File uploadFile = new File(uploadPath,randomName);
 			if (!uploadFile.getParentFile().exists()) {
 				uploadFile.mkdirs();
@@ -36,5 +36,20 @@ public class FileUtil {
 		}
 		
 		return headImgPath;
+	}
+
+	/**
+	 * 删除用户头像
+	 * @param headImg
+	 */
+	public static void deleteFile(String headImg) {
+		if (SysConfigContants.USER_HEADIMG_DEFAULT.equals(headImg)) {
+			return;
+		}
+		String fileName = headImg.substring(headImg.lastIndexOf("\\")+1);
+		File file = new File(SysConfigContants.USER_HEADIMG_UPLOAD_PATH, fileName);
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 }

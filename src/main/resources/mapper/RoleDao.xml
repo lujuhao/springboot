@@ -18,4 +18,32 @@
 		SELECT * FROM `role`
 	</select>
 
+	<!-- 查询角色列表 -->
+	<select id="selectRoleList" parameterType="com.entity.Role" resultMap="BaseResultMap">
+		SELECT 
+			* 
+		FROM 
+			`role` 
+		WHERE 
+			1=1
+			<if test="name !=null and name !='' ">
+				AND `name` LIKE CONCAT('%',#{name},'%')
+			</if>
+
+			<choose>
+				<when test="page.orderBy != null and page.orderBy !='' ">
+					ORDER BY ${page.orderBy}
+				</when>
+				
+				<otherwise>
+					ORDER BY `name`
+				</otherwise>
+			</choose>
+	</select>
+
+	<!-- 根据名称获取角色  -->
+	<select id="getRoleByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM `role` WHERE `name` = #{name}
+	</select>
+
 </mapper>

@@ -18,36 +18,53 @@
 		<result column="gmt_modified" property="gmtModified" />
 	</resultMap>
 
+	<!-- 查询权限列表 -->
+	<select id="selectPermissionList" parameterType="com.entity.Permission" resultMap="BaseResultMap">
+		SELECT * FROM `permission` WHERE 1=1
+		<if test = " name!=null and name!='' ">
+			AND `name` LIKE CONCAT('%',#{name},'%')
+		</if>
+		
+		<choose>
+			<when test="page.orderBy != null and page.orderBy !='' ">
+				ORDER BY ${page.orderBy}
+			</when>
+		
+			<otherwise>
+				ORDER BY `sort` ASC
+			</otherwise>
+		</choose>
+	</select>
+
 	<!-- 查询父菜单 -->
 	<select id="findParentMenu" resultMap="BaseResultMap">
-		SELECT * from permission WHERE id in
-		(
-			SELECT pid from role_permission WHERE rid in
-			(
-			SELECT rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{0} and status = 1
+		SELECT * from `permission` WHERE `id` in(
+			SELECT `pid` FROM `role_permission` WHERE `rid` in(
+				SELECT `rid` FROM `user_role` INNER JOIN `role` on `user_role`.rid = `role`.id WHERE `uid` = #{0} AND status = 1
 			)
-		) AND status = 1 and type = 0
+		) 
+		AND status = 1 and type = 0
+		ORDER BY `sort` ASC
 	</select>
 
 	<!-- 查询子菜单 -->
 	<select id="findSubMenu" resultMap="BaseResultMap">
-		SELECT * from permission WHERE id in
-		(
-		select pid from role_permission WHERE rid in
-		(
-		select rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{uid} and status = 1
-		)
-		) and status = 1 and type = 1 and pid = #{pid}
+		SELECT * FROM `permission` WHERE `id` IN(
+			SELECT pid from role_permission WHERE `rid` in(
+				SELECT `rid` FROM `user_role` INNER JOIN `role` on `user_role`.rid = `role`.id WHERE `uid` = #{uid} AND status = 1
+			)
+		) 
+		AND status = 1 and type = 1 and pid = #{pid}
+		ORDER BY `sort` ASC
 	</select>
 
 	<select id="findUserPermission" resultMap="BaseResultMap">
-		SELECT * from permission WHERE id in
-		(
-		select pid from role_permission WHERE rid in
-		(
-		select rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{0} and status = 1
-		)
-		) and status = 1 and type in (1,2)
+		SELECT * FROM `permission` WHERE `id` IN(
+			SELECT `pid` FROM `role_permission` WHERE `rid` in(
+				SELECT `rid`  FROM `user_role` INNER JOIN `role` on `user_role`.rid = `role`.id WHERE `uid` = #{0} AND status = 1
+			)
+		) 
+		AND status = 1 and type in (1,2)
 	</select>
 
 

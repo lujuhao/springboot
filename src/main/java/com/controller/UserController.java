@@ -59,7 +59,7 @@ public class UserController extends BaseController {
     public String list(Model model) {
         List<Role> allRole = roleService.selectAllRole();
         model.addAttribute("allRole", allRole);
-        return "user/list";
+        return "user/userList";
     }
     
     /**
@@ -80,13 +80,16 @@ public class UserController extends BaseController {
 
     /**
      * 添加用户
-     * @param user
+     * @param user 用户信息
+     * @param 用户头像
      * @return
      */
     @ResponseBody
     @PostMapping
-    public ReturnResult addUser(User user) {
+    public ReturnResult addUser(User user,@RequestParam(name="addHeadImg",required=false)MultipartFile file) {
     	try {
+    		String uploadPath = FileUtil.uploadUserHeadImg(file);
+    		user.setHeadImg(uploadPath);
     		userService.addUser(user);
     		return renderSuccess("添加用户成功");
 		} catch (Exception e) {
@@ -141,11 +144,12 @@ public class UserController extends BaseController {
     /**
      * 修改用户
      * @param user
+     * @param file
      * @return
      */
     @ResponseBody
     @PutMapping()
-    public ReturnResult updateUser(User user, @RequestParam(value="img",required=false)MultipartFile multipartFile) {
+    public ReturnResult updateUser(User user, @RequestParam(value="updateHeadImg",required=false)MultipartFile multipartFile) {
     	try {
     		if (null != multipartFile) {
     			String filePath = FileUtil.uploadUserHeadImg(multipartFile);
@@ -166,12 +170,12 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @DeleteMapping("{id}")
-    public ReturnResult delete(@PathVariable("id")String id) {
+    public ReturnResult deleteUser(@PathVariable("id")String id) {
         if (StringUtils.isEmpty(id)) {
             return renderError("请选择要删除的用户");
         }
         try {
-        	userService.deleteUserByIdAndRole(id);
+        	userService.deleteUserById(id);
         	return renderSuccess("删除用户成功");
 		} catch (Exception e) {
 			e.printStackTrace();

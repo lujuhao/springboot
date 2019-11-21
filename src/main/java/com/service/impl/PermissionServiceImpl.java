@@ -7,8 +7,10 @@ import com.dao.RolePermissionDao;
 import com.entity.Menu;
 import com.entity.Permission;
 import com.entity.RolePermission;
+import com.github.pagehelper.PageHelper;
 import com.service.PermissionService;
 import com.service.RolePermissionService;
+import com.vo.Page;
 import com.vo.ZTreeNodes;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,29 @@ import java.util.List;
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission> implements PermissionService {
 
+	@Autowired
+	private PermissionDao permissionDao;
+	
     @Autowired
     private RolePermissionDao rolePermissionMapper;
     
     @Autowired
     private RolePermissionService iRolePermissionService;
 
+    /**
+     * 分页查询权限列表
+     * @param permission 过滤条件
+     * @return
+     */
+	@Override
+	public Page<Permission> selectPermissionByPage(Page<Permission> page, Permission permission) {
+		PageHelper.startPage(page.getPageNum(), page.getPageSize());
+		permission.setPage(page);
+		List<Permission> permissionList = permissionDao.selectPermissionList(permission);
+		page.setList(permissionList);
+		return page;
+	}
+    
     /**
      * 创建登陆用户菜单
      * @param uid
@@ -84,7 +103,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission
             }
             // 设置角色拥有的权限选中
             rolePermissions.forEach(rp -> {
-                if (p.getId() == rp.getPid()) {
+                if (p.getId().equals(rp.getPid())) {
                     node.setChecked(true);
                 }
             });

@@ -19,11 +19,11 @@ public class Permission extends BaseEntity<Permission> {
      * 主键
      */
 	@TableId(value="id")
-	private Long id;
+	private String id;
     /**
      * 上级ID
      */
-	private Long pid;
+	private String pid;
     /**
      * 权限名
      */
@@ -68,19 +68,19 @@ public class Permission extends BaseEntity<Permission> {
 	private Date gmtModified;
 
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Long getPid() {
+	public String getPid() {
 		return pid;
 	}
 
-	public void setPid(Long pid) {
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 

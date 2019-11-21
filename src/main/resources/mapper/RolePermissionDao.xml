@@ -10,5 +10,22 @@
 		<result column="gmt_create" property="gmtCreate" />
 		<result column="gmt_modified" property="gmtModified" />
 	</resultMap>
+	
+	<!-- 删除角色权限 -->
+	<delete id="deleteByRoleId">
+		DELETE FROM `role_permission` WHERE `rid` = #{id}
+	</delete>
 
+
+	<!-- 获取角色权限 -->
+	<select id="getRolePermissions" parameterType="java.lang.String" resultType="com.entity.Permission">
+		SELECT
+			p.* 
+		FROM
+			`permission` p 
+		WHERE EXISTS ( 
+			SELECT `pid` FROM `role_permission` rp WHERE rp.`pid` = p.`id` AND rp.`rid` = #{id} 
+		)
+	</select>
+	
 </mapper>

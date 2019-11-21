@@ -1,21 +1,20 @@
 package com.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.dao.RoleDao;
-import com.dao.RolePermissionDao;
-import com.dao.UserRoleDao;
-import com.entity.Role;
-import com.entity.RolePermission;
-import com.entity.UserRole;
-import com.service.RoleService;
-import com.service.UserRoleService;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.dao.RoleDao;
+import com.dao.RolePermissionDao;
+import com.entity.Role;
+import com.github.pagehelper.PageHelper;
+import com.service.RoleService;
+import com.utils.RandomUtil;
+import com.vo.Page;
 
 /**
  * 角色表Service实现
@@ -27,14 +26,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
 	@Autowired
     private RoleDao roleDao;
 	
-    @Autowired
-    private RolePermissionDao rolePermissionDao;
-    
-    @Autowired
-    private UserRoleDao  userRoleDao;
-    
-    @Autowired
-    private UserRoleService userRoleService;
+	@Autowired
+	private RolePermissionDao rolePermissionDao;
 
     /**
 	 * 获取全部角色
@@ -44,47 +37,57 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
 	public List<Role> selectAllRole() {
 		return roleDao.selectAllRole();
 	}
-    
+
+    /**
+     * 分页查询角色列表
+     * @param page 分页信息
+     * @param role 过滤条件
+     * @return
+     */
+	@Override
+	public Page<Role> selectRoleByPage(Page<Role> page, Role role) {
+		PageHelper.startPage(page.getPageNum(), page.getPageSize());
+		role.setPage(page);
+		List<Role> list = roleDao.selectRoleList(role);
+		page.setList(list);
+		return page;
+	}
+
 	/**
-     * 删除角色表并且删除角色权限表关联数据
+	 * 根据名称获取角色
+	 * @param name
+	 * @return
+	 */
+	@Override
+	public Role getRoleByName(String name) {
+		return roleDao.getRoleByName(name);
+	}
+
+	/**
+	 * 创建角色
+	 * @param role
+	 */
+	@Override
+	public void addRole(Role role) {
+		role.setId(RandomUtil.getUUID());
+		role.setGmtCreate(new Date());
+		
+		roleDao.insert(role);
+	}
+	
+	/**
+     * 删除角色
      * @param id
      * @return
      */
-    @Transactional
-    @Override
-    public boolean deleteRoleByIdAndPermission(String id) {
-        // 拼接角色表删除list
-        String[] split = id.split(",");
-        List<String> userId = new ArrayList<>();
-        for (String item:split) {
-            userId.add(item);
-        }
-        // 删除角色表
-        baseMapper.deleteBatchIds(userId);
+	@Override
+	@Transactional
+	public void deleteRoleById(String id) {
+		String [] ids = id.split(",");
+		for (String roleId : ids) {
+			rolePermissionDao.deleteByRoleId(roleId);
+			roleDao.deleteById(roleId);
+		}
+	}
 
-        // 删除角权限关联表数据
-        EntityWrapper<RolePermission> permissionEntityWrapper = new EntityWrapper<>();
-        permissionEntityWrapper.in("rid", id);
-        rolePermissionDao.delete(permissionEntityWrapper);
-
-        return true;
-    }
-
-    /**
-     * 分配用户角色
-     * @param userRoles
-     * @return
-     */
-    @Transactional
-    @Override
-    public boolean modifyUserRole(List<UserRole> userRoles) {
-        // 删除用户角色原表数据
-        EntityWrapper<UserRole> userRoleEntityWrapper = new EntityWrapper<>();
-        userRoleEntityWrapper.eq("uid", userRoles.get(0).getUid());
-        userRoleDao.delete(userRoleEntityWrapper);
-
-        // 新增用户角色数据 并 返回
-        return userRoleService.insertBatch(userRoles);
-    }
-    
 }
